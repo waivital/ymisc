@@ -1,0 +1,41 @@
+Native
+
+
+- registerHanderForJs
+messageHandlers.put(handlerName, handler);
+
+- callJsHander
+doSend(handlerName, data, new CallBack); //new callbackId
+_dispatchMessageFromNative
+
+
+
+{
+	handlerName,
+	data,
+	callbackId
+}
+	| |
+	| |
+	| | Message Queue
+	| |
+	| |
+
+{
+	responseId //=callbackId,
+	responseData
+}
+
+
+
+Javascript
+
+
+- registerHanderForNative
+'handerName'
+messageHandlers[handlerName] = handler;
+
+- callNativeHander
+
+doSend(handerName, data, callback) //new callbackId
+//reload iframe src
