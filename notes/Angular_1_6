@@ -1,0 +1,126 @@
+publishExternalAPI {
+
+    extend(angular, { publicMethods })
+
+    setupModuleLoader {
+        angular.module (name, requires, configFn) {
+            modules = {
+                [name: String]: [moduleInstance: {
+                    [_invokeQueue: Array<[provider, method, arguments]>]
+                    [_configBlocks: Array<[provider, method, arguments]>]
+                    [_runBlocks: Array<Function>]
+                    info
+                    requires
+                    name
+
+                    provider: '$provide', 'provider'                        @invokeLaterAndSetModuleName
+                    factory: '$provide', 'factory'                          @invokeLaterAndSetModuleName
+                    service: '$provide', 'service'                          @invokeLaterAndSetModuleName
+                    value: '$provide', 'value'                              @invokeLater
+                    constant: '$provide', 'constant', 'unshift'             @invokeLater
+                    decorator: '$provide', 'decorator', configBlocks        @invokeLaterAndSetModuleName
+                    animation: '$animateProvider', 'register'               @invokeLaterAndSetModuleName
+                    filter: '$filterProvider', 'register'                   @invokeLaterAndSetModuleName
+                    controller: '$controllerProvider', 'register'           @invokeLaterAndSetModuleName
+                    directive: '$compileProvider', 'directive'              @invokeLaterAndSetModuleName
+                    component: '$compileProvider', 'component'              @invokeLaterAndSetModuleName
+                    config: '$injector', 'invoke', 'push', configBlocks     @invokeLater
+                    run: runBlocks.push(block)
+
+                    {
+                        if (configFn) {
+                          config(configFn);
+                        }
+                    }
+                }]
+            }
+        }
+    }
+
+    angularModule('ng', ['ngLocale'], SetupFunction)
+}
+
+angularModule('ngLocale', [], SetupFunction)
+
+// For auto bootstrap
+jqLite {
+    angularInit(window.document, bootstrap)
+}
+
+bootstrap {
+    doBootstrap {
+        modules = [
+            'ng',
+            ($provide) => { $provide.value('$rootElement', element) },
+            ...modules
+        ]
+
+        // alias angular.injector
+        createInjector {
+            providerCache = {
+                $provide: {
+
+                }
+            }
+
+            instanceCache = {}
+
+            providerInjector = createInternalInjector(providerCache, EmptyProviderFunction)
+
+            instanceInjector = protoInstanceInjector =
+                createInternalInjector(instanceCache, function(serviceName, caller) {
+                    var provider = providerInjector.get(serviceName + providerSuffix, caller);
+                    return instanceInjector.invoke(provider.$get, provider, undefined, serviceName);
+                })
+
+            loadModules {
+                // 递归载入 modules 以及依赖
+                runBlocks = runBlocks.concat(loadModules(moduleInstant.requires)).concat(moduleInstant._runBlocks);
+
+                // runInvokeQueue 使用 providerInjector 的 invoke
+                // 调用 invokeQueue 里注册好的操作, providerCache 生成
+                runInvokeQueue(moduleFn._invokeQueue);
+
+                // 通过 decorator, config 注册的存放在 _configBlocks
+                runInvokeQueue(moduleFn._configBlocks);
+
+                if isFunction(module) or isArray(module)
+                    runBlocks.push(providerInjector.invoke(module))
+
+                return runBlocks
+            }
+
+            // 将 $injector 存到 instanceCache
+            instanceInjector = protoInstanceInjector.get('$injector');
+
+            // injector is done
+            each(runBlocks, instanceInjector.invoke)
+
+            return instanceInjector
+
+            getService(serviceName, caller)
+            invoke (fn, self, locals, serviceName)
+            instantiate(Type, locals, serviceName)
+
+            /**
+             * provider = {$get: Fn}
+             * factory = {$get: FactoryFn {
+             *   return instanceInjector.invoke(factory, this)
+             * }}
+             * service = {$get: ($injector) => { $injector.instantiate(constructor) }}
+             * value = {$get: valueFn}
+             * constant = //directly add value to cache register
+             * decorator = {$get: () => { instanceInjector.invoke(decorFn, null, {$delegate: origInstance}) }}
+             **/
+        }
+
+        injector.invoke(['$rootScope', '$rootElement', '$compile', '$injector',
+           function bootstrapApply(scope, element, compile, injector) {
+            scope.$apply(function() {
+              element.data('$injector', injector);
+              compile(element)(scope);
+            });
+          }]
+        )
+    }
+}
