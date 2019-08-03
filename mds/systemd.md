@@ -71,13 +71,16 @@ systemctl edit --full nginx.service
 ### Service units
 
 ```
-A unit configuration file whose name ends in .service encodes information about a process controlled and supervised by systemd.
+A unit configuration file whose name ends in .service encodes information
+about a process controlled and supervised by systemd.
 ```
 
 ### Socket units
 
 ```
-A unit configuration file whose name ends in ".socket" encodes information about an IPC or network socket or a file system FIFO controlled and supervised by systemd, for socket-based activation.
+A unit configuration file whose name ends in ".socket" encodes information
+about an IPC or network socket or a file system FIFO controlled
+and supervised by systemd, for socket-based activation.
 ```
 
 example
@@ -124,7 +127,9 @@ sudo rm /etc/systemd/system/hello.socket /etc/systemd/system/hello@.service /usr
 ### Target units
 
 ```
-A unit configuration file whose name ends in ".target" encodes information about a target unit of systemd, which is used for grouping units and as well-known synchronization points during start-up.
+A unit configuration file whose name ends in ".target" encodes information
+about a target unit of systemd, which is used for
+grouping units and as well-known synchronization points during start-up.
 ```
 
 
