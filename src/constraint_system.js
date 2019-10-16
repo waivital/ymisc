@@ -182,65 +182,7 @@ const multiplier = makeConstraint(function multiplierNewValue(m1, m2, product, m
   }
 })
 
-// 9C = 5(F-32)
-function celsiusFahrenheitConverter(c, f) {
-  let u = makeConnector(),
-    v = makeConnector(),
-    w = makeConnector(),
-    x = makeConnector(),
-    y = makeConnector();
-
-  multiplier(c, w, u)
-  multiplier(v, x, u)
-  adder(v, y, f)
-  constant(9, w)
-  constant(5, x)
-  constant(32, y)
-}
-
-// a + b = 2c
-function averager(a, b, c) {
-  let u = makeConnector()
-  let x = makeConnector()
-
-  multiplier(c, x, u)
-  adder(a, b, u)
-
-  constant(2, x)
-}
-
-let C = makeConnector()
-let F = makeConnector()
-
-celsiusFahrenheitConverter(C, F)
-
-function testCelsiusFahrenheit(C, F) {
-  probe('Celsius temp', C)
-  probe('Fahrenheit temp', F)
-
-  setValue(C, 25, 'user')
-
-  forgetValue(C, 'user')
-  setValue(F, 212, 'user')
-}
-
-testCelsiusFahrenheit(C, F)
-
-let A = makeConnector()
-let B = makeConnector()
-let AVG = makeConnector()
-
-averager(A, B, AVG)
-
-probe('A value', A)
-probe('B value', B)
-probe('AVG value', AVG)
-
-setValue(A, 4, 'user')
-setValue(B, 8, 'user')
-
-
-const co = {
+const operator = {
   '+'(x, y) {
     const z = makeConnector()
 
@@ -262,7 +204,7 @@ const co = {
 
     return z
   },
-  'v'(x) {
+  'val'(x) {
     const z = makeConnector()
 
     constant(x, z)
@@ -271,13 +213,73 @@ const co = {
   }
 }
 
-function celsiusFahrenheitConverterV2(x) {
-  return co['+'](
-    co['*'](
-      co['/'](co['v'](9), co['v'](5)), x), co['v'](32))
-}
 
-let NC = makeConnector()
-let NF = celsiusFahrenheitConverterV2(NC)
+;(function test() {
+  // 9C = 5(F-32)
+  function celsiusFahrenheitConverter(c, f) {
+    let u = makeConnector(),
+      v = makeConnector(),
+      w = makeConnector(),
+      x = makeConnector(),
+      y = makeConnector();
 
-testCelsiusFahrenheit(NC, NF)
+    multiplier(c, w, u)
+    multiplier(v, x, u)
+    adder(v, y, f)
+    constant(9, w)
+    constant(5, x)
+    constant(32, y)
+  }
+
+  // a + b = 2c
+  function averager(a, b, c) {
+    let u = makeConnector()
+    let x = makeConnector()
+
+    multiplier(c, x, u)
+    adder(a, b, u)
+
+    constant(2, x)
+  }
+
+  let C = makeConnector()
+  let F = makeConnector()
+
+  celsiusFahrenheitConverter(C, F)
+
+  function testCelsiusFahrenheit(C, F) {
+    probe('Celsius temp', C)
+    probe('Fahrenheit temp', F)
+
+    setValue(C, 25, 'user')
+
+    forgetValue(C, 'user')
+    setValue(F, 212, 'user')
+  }
+
+  testCelsiusFahrenheit(C, F)
+
+  let A = makeConnector()
+  let B = makeConnector()
+  let AVG = makeConnector()
+
+  averager(A, B, AVG)
+
+  probe('A value', A)
+  probe('B value', B)
+  probe('AVG value', AVG)
+
+  setValue(A, 4, 'user')
+  setValue(B, 8, 'user')
+
+  function celsiusFahrenheitConverterV2(x) {
+    return operator['+'](
+      operator['*'](
+        operator['/'](operator['val'](9), operator['val'](5)), x), operator['val'](32))
+  }
+
+  let NC = makeConnector()
+  let NF = celsiusFahrenheitConverterV2(NC)
+
+  testCelsiusFahrenheit(NC, NF)
+}())
