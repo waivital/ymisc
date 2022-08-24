@@ -44,43 +44,49 @@ sudo pacman -Syyuu
 
 [#git]()
 
-- 在使用了 git add 的情况下，并且丢失时间不是很久，理论上是可以从 index objects 中恢复的，可以使用 `git fsck --lost-found` 命令，下面是使用例子
+- 在使用了 git add 的情况下，并且丢失时间不是很久，理论上可以从 index objects 中恢复，首先使用 `git fsck --lost-found` 命令，将孤立的 objects 写入 `.git/lost-found/commit/` 或者 `.git/lost-found/other/` 中，再使用 `git show <hash>` 来检查相关文件的内容并且筛选需要的改动，下面是使用此方法的例子。
 
-```bash
-# Demo 1 使用 git fsck --lost-found 恢复丢失的修改
+<details>
+  <summary>点击查看例子</summary>
 
-# 新建个用于测试的 git 项目
-mkdir demo-1
-cd demo-1
-git init
-echo 'demo string 1' > example.txt
-git add example.txt
-git commit -m "Initial Commit"
+   ```bash
+   # Demo 1 使用 git fsck --lost-found 恢复丢失的修改
 
-# 添加改动, 添加一行到文件结尾
-echo 'some modification' >> example.txt
-# 查看状态
-git status
+   # 新建个用于测试的 git 项目
+   mkdir demo-1
+   cd demo-1
+   git init
+   echo 'demo string 1' > example.txt
+   git add example.txt
+   git commit -m "Initial Commit"
 
-# add 修改的文件
-git add example.txt
+   # 添加改动, 添加一行到文件结尾
+   echo 'some modification' >> example.txt
+   # 查看状态
+   git status
 
-# 模拟不小心 reset 了项目
-git reset --hard
-git status
+   # add 修改的文件
+   git add example.txt
 
-# 此时改动已经没有了，通过此方法恢复
-git fsck --lost-found
+   # 模拟不小心 reset 了项目
+   git reset --hard
+   git status
 
-# 会看到类似下面的输出
-#
-#   Checking object directories: 100% (256/256), done.
-#   dangling blob b2bbed52e6ff3c99c4934758389601e7837d8be9
+   # 此时改动已经没有了，通过此方法恢复
+   git fsck --lost-found
 
-# 查看 lost-found 输出的目录，里面会有个 other 文件夹
-ls .git/lost-found/
+   # 会看到类似下面的输出
+   #
+   #   Checking object directories: 100% (256/256), done.
+   #   dangling blob b2bbed52e6ff3c99c4934758389601e7837d8be9
 
-# 用 git show 或者 cat 查看并找回的文件内容，用对应的内容恢复文件即可
-git show b2bbed52e6ff3c99c4934758389601e7837d8be9
-cat .git/lost-found/other/b2bbed52e6ff3c99c4934758389601e7837d8be9
-```
+   # 查看 lost-found 输出的目录，里面会有个 other 文件夹
+   ls .git/lost-found/
+
+   # 用 git show 或者 cat 查看并找回的文件内容，用对应的内容恢复文件即可
+   git show b2bbed52e6ff3c99c4934758389601e7837d8be9
+   cat .git/lost-found/other/b2bbed52e6ff3c99c4934758389601e7837d8be9
+   ```
+</details>
+
+- 在使用了 git stash pop 后，因为各种操作丢失了这个 stash 的内容。这种情况下，上次 stash 的内容可能还没被清理掉，如果知道这次 stash 的 hash 的话（一种方法是搜索命令行历史记录 Dropped refs/stash@{0} (...hash...) 来找到这次 drop 的 hash），可以使用 `git stash apply <hash>` 来恢复内容。
