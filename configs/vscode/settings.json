@@ -2,14 +2,11 @@
   "editor.fontSize": 16,
   "editor.tabSize": 2,
   "editor.minimap.enabled": false,
-  "editor.smoothScrolling": true,
+  "editor.smoothScrolling": false,
   "editor.cursorStyle": "line",
   "editor.lineNumbers": "on",
   "editor.wordWrap": "off",
 
-  "workbench.editorAssociations": {
-    "*.ipynb": "jupyter.notebook.ipynb"
-  },
   "workbench.editor.showTabs": false,
   "workbench.editor.untitled.hint": "hidden",
   "workbench.startupEditor": "newUntitledFile",
@@ -24,63 +21,43 @@
   "vim.handleKeys": {
     "<C-r>": false
   },
+
+  "vim.leader": "<space>",
   "vim.easymotion": true,
   "vim.useSystemClipboard": true,
   "vim.normalModeKeyBindingsNonRecursive": [
     {
-      "before": ["<space>"],
-      "commands": ["vspacecode.space"]
+      // Reload window
+      "before": ["<leader>", "q", "r"],
+      "commands": ["workbench.action.reloadWindow"]
     },
     {
-      "before": ["<leader>", "s"],
-      "after": ["<leader>", "<leader>", "s"]
+      // Kill active editor
+      "before": ["<leader>", "b", "k"],
+      "commands": ["workbench.action.closeActiveEditor"]
+    },
+    {
+      // Reveal active file in os's File Explorer
+      "before": ["<leader>", "S", "E"],
+      "commands": ["workbench.action.files.revealActiveFileInWindows"]
+    },
+    {
+      // Highlight active file in sidebar
+      "before": ["<leader>", "S", "S"],
+      "commands": ["workbench.files.action.showActiveFileInExplorer"]
+    },
+    {
+      // Jump back
+      "before": ["<leader>", "j", "b"],
+      "commands": ["workbench.action.navigateBack"]
+    },
+    {
+      // Jump forward
+      "before": ["<leader>", "j", "f"],
+      "commands": ["workbench.action.navigateForward"]
     }
   ],
-  "vim.visualModeKeyBindingsNonRecursive": [
-    {
-      "before": ["<space>"],
-      "commands": ["vspacecode.space"]
-    }
-  ],
-
-  "vspacecode.bindingOverrides": [
-    {
-      "keys": "b.k",
-      "name": "Kill active editor",
-      "type": "command",
-      "command": "workbench.action.closeActiveEditor"
-    },
-    {
-      "keys": "S.E",
-      "name": "Show active file in os filesystem",
-      "type": "command",
-      "command": "workbench.action.files.revealActiveFileInWindows"
-    },
-    {
-      "keys": "S.S",
-      "name": "Show active file in sidebar",
-      "type": "command",
-      "command": "workbench.files.action.showActiveFileInExplorer"
-    },
-    {
-      "keys": "x.c",
-      "name": "Change Case",
-      "type": "command",
-      "command": "extension.changeCase.commands"
-    },
-    {
-      "keys": "j.b",
-      "name": "Navigate back",
-      "type": "command",
-      "command": "workbench.action.navigateBack"
-    },
-    {
-      "keys": "j.B",
-      "name": "Navigate forward",
-      "type": "command",
-      "command": "workbench.action.navigateForward"
-    }
-  ],
+  "vim.visualModeKeyBindingsNonRecursive": [],
 
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -113,7 +90,7 @@
   "cssModules.camelCase": true,
 
   "prettier.quoteProps": "consistent",
-  "prettier.jsxBracketSameLine": true,
+  "prettier.bracketSameLine": true,
   "prettier.printWidth": 98,
   "prettier.semi": false,
   "prettier.singleQuote": true,
