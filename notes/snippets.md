@@ -39,6 +39,21 @@ sudo pacman -Syu
 sudo pacman -Syyuu
 ```
 
+### Fish Shell Installation on Macos
+
+Install fish shell
+
+```bash
+brew install fish
+```
+
+Add homebrew env to fish shell
+
+```fish
+# Add this line to the top of ~/.config/fish/config.fish
+eval (/opt/homebrew/bin/brew shellenv)
+```
+
 
 ### git 恢复不小心丢失的修改
 
