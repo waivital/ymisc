@@ -7,9 +7,10 @@
   "editor.lineNumbers": "on",
   "editor.wordWrap": "off",
 
-  "workbench.editor.showTabs": false,
-  "workbench.editor.untitled.hint": "hidden",
+  "workbench.editor.showTabs": "single",
+  "workbench.editor.empty.hint": "hidden",
   "workbench.startupEditor": "newUntitledFile",
+  "workbench.activityBar.location": "top",
   "workbench.colorTheme": "Atom One Dark",
   "workbench.iconTheme": "vscode-icons",
 
@@ -26,36 +27,33 @@
   "vim.easymotion": true,
   "vim.useSystemClipboard": true,
   "vim.normalModeKeyBindingsNonRecursive": [
-    {
-      // Reload window
-      "before": ["<leader>", "q", "r"],
-      "commands": ["workbench.action.reloadWindow"]
-    },
-    {
-      // Kill active editor
-      "before": ["<leader>", "b", "k"],
-      "commands": ["workbench.action.closeActiveEditor"]
-    },
-    {
-      // Reveal active file in os's File Explorer
-      "before": ["<leader>", "S", "E"],
-      "commands": ["workbench.action.files.revealActiveFileInWindows"]
-    },
-    {
-      // Highlight active file in sidebar
-      "before": ["<leader>", "S", "S"],
-      "commands": ["workbench.files.action.showActiveFileInExplorer"]
-    },
-    {
-      // Jump back
-      "before": ["<leader>", "j", "b"],
-      "commands": ["workbench.action.navigateBack"]
-    },
-    {
-      // Jump forward
-      "before": ["<leader>", "j", "f"],
-      "commands": ["workbench.action.navigateForward"]
-    }
+    { "before": ["<leader>", "w", "s"], "commands": ["workbench.action.splitEditorDown"] },
+    { "before": ["<leader>", "w", "v"], "commands": ["workbench.action.splitEditor"] },
+    { "before": ["<leader>", "w", "m"], "commands": ["workbench.action.maximizeEditorHideSidebar"] },
+    { "before": ["<leader>", "w", "="], "commands": ["workbench.action.evenEditorWidths"] },
+    { "before": ["<leader>", "w", "d"], "commands": ["workbench.action.closeEditorsAndGroup"] },
+    { "before": ["<leader>", "w", "h"], "commands": ["workbench.action.focusLeftGroup"] },
+    { "before": ["<leader>", "w", "l"], "commands": ["workbench.action.focusRightGroup"] },
+    { "before": ["<leader>", "w", "k"], "commands": ["workbench.action.focusAboveGroup"] },
+    { "before": ["<leader>", "w", "j"], "commands": ["workbench.action.focusBelowGroup"] },
+
+    // Reload window
+    { "before": ["<leader>", "q", "r"], "commands": ["workbench.action.reloadWindow"] },
+    // Kill active editor
+    { "before": ["<leader>", "b", "d"], "commands": ["workbench.action.closeActiveEditor"] },
+
+    // Reveal active file in os's File Explorer
+    { "before": ["<leader>", "S", "E"], "commands": ["workbench.action.files.revealActiveFileInWindows"] },
+    // Highlight active file in sidebar
+    { "before": ["<leader>", "S", "S"], "commands": ["workbench.files.action.showActiveFileInExplorer"] },
+
+    // Jump back
+    { "before": ["<leader>", "j", "b"], "commands": ["workbench.action.navigateBack"] },
+    // Jump forward
+    { "before": ["<leader>", "j", "f"], "commands": ["workbench.action.navigateForward"] },
+
+    { "before": ["<leader>", "t", "w"], "commands": ["workbench.action.showAllSymbols"] },
+    { "before": ["<leader>", "t", "t"], "commands": ["workbench.action.gotoSymbol"] }
   ],
   "vim.visualModeKeyBindingsNonRecursive": [],
 
@@ -91,7 +89,7 @@
 
   "prettier.quoteProps": "consistent",
   "prettier.bracketSameLine": true,
-  "prettier.printWidth": 98,
+  "prettier.printWidth": 108,
   "prettier.semi": false,
   "prettier.singleQuote": true,
 
@@ -106,6 +104,9 @@
   "gitlens.hovers.avatars": false,
   "gitlens.codeLens.authors.enabled": false,
   "gitlens.codeLens.enabled": false,
+  "gitlens.plusFeatures.enabled": false,
+  "gitlens.launchpad.indicator.enabled": false,
+  "gitlens.launchpad.indicator.polling.enabled": false
 
   "plantuml.server": "http://127.0.0.1:8080",
   "plantuml.render": "PlantUMLServer",
